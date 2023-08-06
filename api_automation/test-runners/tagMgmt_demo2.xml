@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="tagManagement">
+<parameter name="aut_prop_file_name" value="automation_demo2.properties" />
+	<test thread-count="5" name="Test">
+		<groups>
+			<run>
+				<include name="TagManagement_API" />
+			</run>
+		</groups>
+		<classes>
+			<class name="tagManagement.apiTestScript.CreateTagAPI_Test" />
+			<class name="tagManagement.apiTestScript.GetNameSpaceAPI_Test" />
+			<class name="tagManagement.apiTestScript.GetTagNameAPI_Test" />
+			<class name="tagManagement.apiTestScript.PermissionAPI_Test" />
+			<class name="tagManagement.apiTestScript.UpdateTagAPI_Test" />
+			<class name="tagManagement.apiTestScript.AddBulkTagAPI_Test" />
+			<class name="tagManagement.apiTestScript.SaveBulkTagAPI_Test"/>
+			<class name="tagManagement.apiTestScript.AddKeyTopicsAPI_Test" />
+			<class name="tagManagement.apiTestScript.DeleteTagAPI_Test" />
+			<class name="tagManagement.apiTestScript.GetFilterAPI_Test" />
+			<class name="tagManagement.apiTestScript.SearchAPI_Test" />
+		</classes>
+	</test>
+</suite> 

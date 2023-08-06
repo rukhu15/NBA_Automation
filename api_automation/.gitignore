@@ -1,0 +1,10 @@
+/target/
+/reports/*
+!reports/.gitkeep
+/test-output/
+.settings
+.idea
+.classpath
+.project
+src/main/resources/FailTestRecords
+/bin/

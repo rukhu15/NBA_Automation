@@ -1,0 +1,630 @@
+{
+  "paragraphs": [
+    {
+      "user": "anonymous",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672133894885_599837850",
+      "id": "LoadingDeltaTableRelatedLibraries",
+      "dateCreated": "2022-12-27T09:38:14+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:893",
+      "text": "%spark.conf\nspark.jars.packages io.delta:delta-core_2.12:2.0.0rc1\nspark.sql.extensions io.delta.sql.DeltaSparkSessionExtension\nspark.sql.catalog.spark_catalog org.apache.spark.sql.delta.catalog.DeltaCatalog",
+      "dateUpdated": "2022-12-27T09:38:37+0000",
+      "title": "Loading delta related libraries"
+    },
+    {
+      "text": "%spark.pyspark\r\ndf_output_required = True #True, False\r\n\r\ndb_name = z.textbox(\"db_name\")\r\nwide_base_table = z.textbox(\"wide_base_table\")\r\nforPublishHistTable = z.textbox(\"forPublishHistTable\")\r\nclient_ref = z.textbox(\"client_ref\")\r\nchannelIDNameList = z.textbox(\"channelIDNameList\")\r\n\r\nscenario_id = int(z.textbox(\"scenario_id\"))\r\naud_where_clause = z.textbox(\"aud_where_clause\")\r\n\r\nworkflow_count = int(z.textbox(\"workflow_count\"))\r\nworkflowIDs = z.textbox(\"workflowIDs\")\r\ntrigger_where_clause = z.textbox(\"trigger_where_clause\")\r\nrule_where_clause = z.textbox(\"rule_where_clause\")\r\naction_channel_details = z.textbox(\"action_channel_details\")\r\n\r\nadjudicate_channel = z.textbox(\"adjudicate_channel\")\r\nadjudicate_client = z.textbox(\"adjudicate_client\")    # will get input like SuggestionCountLimit:IntervalDuration\r\nadjudicate_clientChannel = z.textbox(\"adjudicate_clientChannel\")",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:39:41+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672133929333_621367987",
+      "id": "FetchingParametersFromAutomationAPI",
+      "dateCreated": "2022-12-27T09:38:49+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:985",
+      "title": "Fetching Input Parameters"
+    },
+    {
+      "text": "%spark.pyspark\nfrom pyspark.sql.functions import countDistinct\nfrom pyspark.sql import functions as F\nimport pandas as pd\n\ndef getExpecteddf(tableName,whereClause,additionalColumnRequired):\n    df = spark.sql(f'select distinct {client_ref}, BRAND {additionalColumnRequired} from {db_name}.{tableName} WHERE {whereClause} ')\n    return df\n\ndef getActualdf(tableName,additionalColumnRequired):\n    df = spark.sql(f'select distinct {client_ref}, BRAND {additionalColumnRequired} from {db_name}.{tableName} ')\n    return df\n\ndef getAllDatadf(tableName):\n    df = spark.sql(f' select * from {db_name}.{tableName} ')\n    return df\n    \ndef getdfDistinctDataCount(df):\n    df = df.select(countDistinct(client_ref, \"BRAND\"))\n    return df\n    \ndef getChannelName(channelID):\n    channelName = spark.sql(f'select CHANNEL_NAME from {db_name}.config_ciq_channel_scenario{scenario_id} where CHANNEL_ID = {channelID} ').collect()[0][0]\n    return channelName\n\ndef dfCompare(section,actual_df,expected_df):\n    if df_output_required:\n        print('\\nActual df for',section)\n        actual_df.show()\n        print('\\nExpected df for',section)\n        expected_df.show()\n    assert sorted(actual_df.collect()) == sorted(expected_df.collect()), (f'Might be {section} not matching')\n    print(section, 'matching\\n======')\n        \ndef countCompare(section,actual,expected):\n    if df_output_required:\n        print('\\nActual value for',section,actual)\n        print('Expected value for',section,expected)\n    assert actual == expected, (f'Might be {section} not matching')\n    print(section, 'matching\\n======')",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:40:45+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134013786_706586668",
+      "id": "CreatingCommonDataFrameForFurtherValidation",
+      "dateCreated": "2022-12-27T09:40:13+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1103",
+      "title": "General df Methods"
+    },
+    {
+      "text": "%spark.pyspark\nactual_audience_hcp_df = getActualdf(f\"sug_scenario{scenario_id}_audience\",\"\")\nexpected_audience_hcp_df = getExpecteddf(wide_base_table,aud_where_clause,\"\")\ndfCompare('AUDIENCE filtered suggestion',actual_audience_hcp_df,expected_audience_hcp_df)\n\nactual_audience_count_df = getdfDistinctDataCount(actual_audience_hcp_df)\nexpected_audience_count_df = getdfDistinctDataCount(expected_audience_hcp_df)\ndfCompare('AUDIENCE suggestion count',actual_audience_count_df,expected_audience_count_df)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:41:19+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134050805_825129301",
+      "id": "Audience_ValidatingSuggestionAtAudienceLevel",
+      "dateCreated": "2022-12-27T09:40:50+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1194",
+      "title": "Audience : OM-TC-294, OM-TC-295, OM-TC-296 : Validate filtered HCPs and Audience count based on the current active Audience"
+    },
+    {
+      "text": "%spark.pyspark\nfor x in range(workflow_count):\n    workflowID = workflowIDs.split(\":\")[x]\n    print(\"\\n\\n====Validating Trigger for workflow ID\",workflowID,\"====\")\n    \n    actual_trigger_hcp_df = getActualdf(f\"sug_scenario{scenario_id}_workflow{workflowID}_trig\",\"\")\n    where_clause_till_trigger = aud_where_clause + \"AND\" + trigger_where_clause.split(\":\")[x]\n    expected_trigger_hcp_df = getExpecteddf(f\"sug_scenario{scenario_id}_audience\",where_clause_till_trigger,\"\")\n    dfCompare('Trigger filtered suggestion',actual_trigger_hcp_df,expected_trigger_hcp_df)\n    \n    actual_trigger_count_df = getdfDistinctDataCount(actual_trigger_hcp_df)\n    expected_trigger_count_df = getdfDistinctDataCount(expected_trigger_hcp_df)\n    dfCompare('Trigger suggestion count',actual_trigger_count_df,expected_trigger_count_df)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:41:41+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134083915_137051813",
+      "id": "Trigger_ValidateSuggestionAtWorkflowTriggerLevel",
+      "dateCreated": "2022-12-27T09:41:23+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1269",
+      "title": "Workflow Trigger : OM-TC-300, OM-TC-301, OM-TC-302, OM-TC-303 : Validate filtered HCPs and suggestion count"
+    },
+    {
+      "text": "%spark.pyspark\nfor x in range(workflow_count):\n    workflowID = workflowIDs.split(\":\")[x]\n    print(\"\\n\\n====Validating Rule for workflow ID\",workflowID,\"====\")\n    \n    actual_rule_hcp_df = getActualdf(f\"sug_scenario{scenario_id}_workflow{workflowID}_rules\",\"\")\n    \n    where_clause_till_rule = aud_where_clause + \"AND\" + trigger_where_clause.split(\":\")[x] + \"AND\" + rule_where_clause.split(\":\")[x]\n    expected_rule_hcp_df = getExpecteddf(f\"sug_scenario{scenario_id}_audience\",where_clause_till_rule,\"\")\n    dfCompare('Rule filtered suggestion',actual_rule_hcp_df,expected_rule_hcp_df)\n    \n    actual_rule_count_df = getdfDistinctDataCount(actual_rule_hcp_df)\n    expected_rule_count_df = getdfDistinctDataCount(expected_rule_hcp_df)\n    dfCompare('Rule suggestion count',actual_rule_count_df,expected_rule_count_df)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:42:17+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134110952_1805954423",
+      "id": "Rules_ValidateSuggestionAtWorkflowRulesLevel",
+      "dateCreated": "2022-12-27T09:41:50+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1344",
+      "title": "Workflow Rule : OM-TC-304, OM-TC-305, OM-TC-306, OM-TC-307 : Validate filtered HCPs and suggestion count"
+    },
+    {
+      "text": "%spark.pyspark\nfor x in range(workflow_count):\n    workflowID = workflowIDs.split(\":\")[x]\n    print(\"\\n\\n====Validating Action for workflow ID\",workflowID,\"====\")\n    \n    action_details = action_channel_details.split(\":\")[x]\n    numberOfConfiguredChannel = int(action_details.split(\"-\")[0])\n    channels = action_details.split(\"-\")[1].split(\",\")\n    \n    actual_action_hcp_df = getActualdf(f\"sug_scenario{scenario_id}_workflow{workflowID}_action\",\",UI_Channel_ID\")\n    where_clause_till_rule = aud_where_clause + \"AND\" + trigger_where_clause.split(\":\")[x] + \"AND\" + rule_where_clause.split(\":\")[x]\n    expected_action_hcp_df = getExpecteddf(f\"sug_scenario{scenario_id}_audience\",where_clause_till_rule,\"\")\n    \n    for channel in channels:\n        channel_name = getChannelName(channel)\n        actual_channel_hcp_df = actual_action_hcp_df.filter(F.col(\"UI_Channel_ID\") == channel).select(client_ref, 'BRAND')\n        dfCompare(f'Action filtered suggestion on channel ID {channel} - {channel_name}',actual_channel_hcp_df,expected_action_hcp_df)\n        \n        actual_channel_count_df = getdfDistinctDataCount(actual_channel_hcp_df)\n        expected_channel_count_df = getdfDistinctDataCount(expected_action_hcp_df)\n        dfCompare(f'Action suggestion count on channel ID {channel}',actual_channel_count_df,expected_channel_count_df)\n    \n    expected_action_hcp = expected_channel_count_df.collect()[0][0] * numberOfConfiguredChannel\n    actual_action_hcp = getAllDatadf(f\"sug_scenario{scenario_id}_workflow{workflowID}_action\").count()\n    \n    countCompare(f'Workflow {workflowID} level suggestion count',actual_action_hcp,expected_action_hcp)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:43:57+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134219371_2017070383",
+      "id": "Action_ValidateSuggestionAtWorkflowActionLevel",
+      "dateCreated": "2022-12-27T09:43:39+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1442",
+      "title": "Workflow : Action : OM-TC-336, OM-TC-337, OM-TC-338, OM-TC-339 : Validate generated suggestion and suggestion count on all the configured channels"
+    },
+    {
+      "text": "%spark.pyspark\nactual_scenario_level_suggestion_df = getAllDatadf(f\"sug_merge_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n\nfor x in range(workflow_count):\n    workflowID = workflowIDs.split(\":\")[x]\n    print(\"\\n====Fetching suggestion for workflow ID\",workflowID,\"====\")\n    if x==0:\n        expected_scenario_level_suggestion_df = getAllDatadf(f\"sug_scenario{scenario_id}_workflow{workflowID}_action\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n    else:\n        workflow_level_suggestion_df = getAllDatadf(f\"sug_scenario{scenario_id}_workflow{workflowID}_action\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n        expected_scenario_level_suggestion_df.union(workflow_level_suggestion_df)\n    \ndfCompare(f'Generated Scenario level suggestion on sug_merge',actual_scenario_level_suggestion_df,expected_scenario_level_suggestion_df)\n   \nactual_scenario_level_suggestion_count = actual_scenario_level_suggestion_df.count()\nexpected_scenario_level_suggestion_count = expected_scenario_level_suggestion_df.count()\ncountCompare(f'Generated Scenario level suggestion count on sug_merge ',actual_scenario_level_suggestion_count,expected_scenario_level_suggestion_count)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:44:40+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134258809_1732653733",
+      "id": "SUG_MERGE_ValidatingOverallSuggestionsForCompleteScenario",
+      "dateCreated": "2022-12-27T09:44:18+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1517",
+      "title": "Total Suggestion : sug_merge : OM-TC-340, OM-TC-341, OM-TC-342 : Validate generated suggestions for the complete scenario - workflow level, channel level"
+    },
+    {
+      "text": "%spark.pyspark\nactual_scenario_level_hist_suggestion_df = getAllDatadf(f\"sug_merge_hist_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\nexpected_scenario_level_hist_suggestion_df = getAllDatadf(f\"sug_merge_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n\ndfCompare(f'Pre-Adjudication : Generated Scenario level suggestion on sug_merge_hist',actual_scenario_level_hist_suggestion_df,expected_scenario_level_hist_suggestion_df)\n\nactual_scenario_level_hist_suggestion_count = actual_scenario_level_hist_suggestion_df.count()\nexpected_scenario_level_hist_suggestion_count = expected_scenario_level_hist_suggestion_df.count()\ncountCompare(f'Pre-Adjudication : Generated Scenario level suggestion count on sug_merge_hist',actual_scenario_level_hist_suggestion_count,expected_scenario_level_hist_suggestion_count)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:45:13+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134293907_905191115",
+      "id": "PreAdjudication_ValidateOverallSuggestionsInSUG_MERGE_HIST",
+      "dateCreated": "2022-12-27T09:44:53+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1592",
+      "title": "Pre-Adjudication : sug_merge_hist : OM-TC-343 : Validate generated suggestions for the complete scenario - workflow level, channel level"
+    },
+    {
+      "text": "%spark.pyspark\nactual_adj_channel_suggestion_df = getAllDatadf(f\"adj_channel_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\nexpected_adj_channel_suggestion_df = getAllDatadf(f\"sug_merge_hist_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n\ndfCompare(f'Adjudication : CHANNEL : Generated suggestion till adjudication channel input',actual_adj_channel_suggestion_df,expected_adj_channel_suggestion_df)\n\nactual_adj_channel_suggestion_count = actual_adj_channel_suggestion_df.count()\nexpected_adj_channel_suggestion_count = expected_adj_channel_suggestion_df.count()\ncountCompare(f'Adjudication : CHANNEL : Generated suggestion count till adjudication channel input',actual_adj_channel_suggestion_count,expected_adj_channel_suggestion_count)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:45:41+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134324997_1604670946",
+      "id": "AdjudicationChannel_ValidateInputSuggestionsInADJ_CHANNEL",
+      "dateCreated": "2022-12-27T09:45:24+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1670",
+      "title": "Adjudication : Channel : OM-TC-261, OM-TC-366: Validate input individual suggestion"
+    },
+    {
+      "text": "%spark.pyspark\nadj_channel_details = adjudicate_channel.split(\":\")\nfor eachChannel in adj_channel_details:\n    channel_id = eachChannel.split(\"-\")[0]\n    channel_count = eachChannel.split(\"-\")[1]\n    \n    channel_name = getChannelName(channel_id)\n    print('\\n\\n=== Validating Channel rule on',channel_id,\":\",channel_name,\"===\")\n        \n    if int(channel_count) > 0:\n        actual_channel_suggestion_rule_df = spark.sql(f''' select count(*) as approved_channel_suggestion from {db_name}.adj_channel_scenario{scenario_id} where adj_channel_flag = 'Y' AND UI_channel_id = {channel_id} group by UI_channel_id ''')\n        expected_channel_suggestion_rule_df = spark.sql(f' select {channel_count} ')\n        channel_disapproved_suggestion_rule_df = spark.sql(f''' select count(*) as disapproved_channel_suggestion from {db_name}.adj_channel_scenario{scenario_id} where adj_channel_flag = 'N' AND UI_channel_id = {channel_id} group by UI_channel_id ''')\n        \n        if df_output_required:\n            actual_channel_suggestion_rule_df.show()\n            channel_disapproved_suggestion_rule_df.show()\n        \n        if actual_channel_suggestion_rule_df.collect() <= expected_channel_suggestion_rule_df.collect():\n            print(f'Adjudication : Channel : Suggestions on {channel_id} : {channel_name} is under max limit {channel_count} specified on UI i.e. rule working properly\\n')\n        else :\n             assert 1==0, (f'Adjudication : Channel : Might be suggestions on {channel_id} : {channel_name} is not approved/disapproved as compare to max limit {channel_count} configured on UI i.e. rule not working properly\\n')\n      \n    else:\n        actual_channel_suggestion_rule_df = spark.sql(f''' select count(*) as approved_channel_suggestion from {db_name}.adj_channel_scenario{scenario_id} where adj_channel_flag = 'Y' AND UI_channel_id = {channel_id} group by UI_channel_id ''')\n        channel_disapproved_suggestion_rule_df = spark.sql(f''' select count(*) as disapproved_channel_suggestion from {db_name}.adj_channel_scenario{scenario_id} where adj_channel_flag = 'N' AND UI_channel_id = {channel_id} group by UI_channel_id ''')\n        \n        if df_output_required:\n            actual_channel_suggestion_rule_df.show()\n            channel_disapproved_suggestion_rule_df.show()\n            \n        if channel_disapproved_suggestion_rule_df.count() == 0 :\n            print(f'Adjudication : Channel : All suggestions on {channel_id} : {channel_name} is approved as no rule was configured on UI i.e. rule working properly\\n')\n        else :\n            assert 1==0, (f'Adjudication : Channel : Might be all suggestions on {channel_name} is not approved as no rule was configured on UI i.e. rule not working properly\\n')",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:46:11+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134353902_1795844294",
+      "id": "AdjudicationChannel_ValidateCHANNELruleImplementedProperlyInADJ_CHANNEL",
+      "dateCreated": "2022-12-27T09:45:53+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1745",
+      "title": "Adjudication - Channel : OM-TC-252, OM-TC-253, OM-TC-254 : Validate Channel section rule"
+    },
+    {
+      "text": "%spark.pyspark\nactual_adj_client_suggestion_df = getAllDatadf(f\"adj_hcp_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\nexpected_adj_client_suggestion_df = getAllDatadf(f\"adj_channel_scenario{scenario_id}\").filter(F.col('adj_channel_flag') == 'Y').select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n\ndfCompare(f'Adjudication : CLIENT/HCP : Generated suggestion till adjudication CLIENT/HCP input',actual_adj_client_suggestion_df,expected_adj_client_suggestion_df)\n\nactual_adj_client_suggestion_count = actual_adj_client_suggestion_df.count()\nexpected_adj_client_suggestion_count = expected_adj_client_suggestion_df.count()\ncountCompare(f'Adjudication : CLIENT/HCP : Generated suggestion count till adjudication CLIENT/HCP input',actual_adj_client_suggestion_count,expected_adj_client_suggestion_count)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:46:53+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134384359_596761236",
+      "id": "AdjudicationClient_ValidateInputSuggestionsInADJ_HCP",
+      "dateCreated": "2022-12-27T09:46:24+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1823",
+      "title": "Adjudication : Client : OM-TC-261, OM-TC-367 : Validate input individual suggestion"
+    },
+    {
+      "text": "%spark.pyspark\nclient_suggestion_count = int(adjudicate_client.split(\":\")[0])\n\nif client_suggestion_count > 0 :\n    client_suggestion_count_rule_df = spark.sql(f''' select count(*) as unexpected_hcp_suggestion from {db_name}.adj_hcp_scenario{scenario_id} where adj_hcp_flag = 'Y' group by {client_ref}, adj_hcp_flag having unexpected_hcp_suggestion > {client_suggestion_count} ''')\n    \n    if df_output_required:\n        client_suggestion_count_rule_df.show()\n        \n    assert client_suggestion_count_rule_df.count() == 0, (f'Adjudication : Client : Might be Suggestion Count rule not working as expected. More suggestions are approved then expected')\n    print(f'Adjudication : Client : Suggestion Count rule is working properly. Aprroved suggestion are under defined max range {client_suggestion_count}')\n        \nelse:\n    client_suggestion_count_rule_df = spark.sql(f''' select count(*) as invalid_suggestion from {db_name}.adj_hcp_scenario{scenario_id} where adj_hcp_flag <> MIN_SUG_HCP_INTERVAL_DAYS_FLAG ''')\n    \n    if df_output_required:\n        client_suggestion_count_rule_df.show()\n        \n    assert client_suggestion_count_rule_df.collect()[0][0] == 0, (f'Adjudication : Client : Might be Suggestion Count rule not working as expected as suggestion rejected even when no rule configured on UI')\n    print(f'Adjudication : Client : Suggestion Count rule is working properly. No suggestion rejected based on Suggestion Count rule logic')",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:47:28+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134424558_2139849355",
+      "id": "AdjudicationClient_ValidateSUGGESTION_COUNTruleImplementedProperlyInADJ_HCP",
+      "dateCreated": "2022-12-27T09:47:04+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1913",
+      "title": "Adjudication : Client : OM-TC-257, OM-TC-256, OM-TC-259 : Validate Suggestion Count rule"
+    },
+    {
+      "text": "%spark.pyspark\nclient_interval = int(adjudicate_client.split(\":\")[1])\n\nif client_interval > 0 :\n    interval_df = spark.sql(f''' select {client_ref}, max(sug_run_date) as hist_run_date from {db_name}.{forPublishHistTable} where UI_scenario_id={scenario_id} group by {client_ref} ''')\n    interval_df.createOrReplaceTempView(\"forPublishDataInterval\")\n    client_interval_df = spark.sql(f''' select count(*) as invalid_suggestions from {db_name}.adj_hcp_scenario{scenario_id} as current \n            LEFT JOIN forPublishDataInterval as history ON current.{client_ref}=history.{client_ref} \n            where MIN_SUG_HCP_INTERVAL_DAYS_FLAG=\"Y\" AND DATEDIFF(to_timestamp(SUG_RUN_DATE,'yyyyMMdd'), to_timestamp(hist_run_date,'yyyyMMdd')) < {client_interval} ''')\n    if df_output_required:\n        client_interval_df.show()\n    assert client_interval_df.collect()[0][0] == 0, (f'Adjudication : Client : Might be Interval rule not worked as expected and suggestions are not satisfying Interval duration')\n    print('Adjudication : Client : Interval rule is working properly and suggestions are satisfying Interval duration',client_interval)\n        \nelse:\n    client_interval_rule_df = spark.sql(f''' select count(*) as disapproved_suggestion from {db_name}.adj_hcp_scenario{scenario_id} where MIN_SUG_HCP_INTERVAL_DAYS_FLAG=\"N\" ''')\n    if df_output_required:\n            client_interval_rule_df.show()\n    assert client_interval_rule_df.collect()[0][0] == 0, (f'Adjudication : Client : Might be Interval rule not worked as expected i.e. suggestion rejected even when no rule configured on UI')\n    print('Adjudication : Client : Interval rule is working properly. No suggestion rejected based on Interval logic rule logic as no rule configured on UI')",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:48:16+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134460971_2145110445",
+      "id": "AdjudicationClient_ValidateINTERVALruleImplementedProperlyInADJ_HCP",
+      "dateCreated": "2022-12-27T09:47:40+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2009",
+      "title": "Adjudication : Client : OM-TC-258, OM-TC-256, OM-TC-259 : Validate Interval rule"
+    },
+    {
+      "text": "%spark.pyspark\nactual_adj_client_channel_suggestion_df = getAllDatadf(f\"adj_hcp_channel_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\nexpected_adj_client_channel_suggestion_df = getAllDatadf(f\"adj_hcp_scenario{scenario_id}\").filter((F.col('adj_channel_flag') == 'Y') & (F.col('adj_hcp_flag') == 'Y')).select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n\ndfCompare(f'Adjudication : CLIENT CHANNEL : Generated suggestion till adjudication hcp_channel input',actual_adj_client_channel_suggestion_df,expected_adj_client_channel_suggestion_df)\n\nactual_adj_client_channel_suggestion_count = actual_adj_client_channel_suggestion_df.count()\nexpected_adj_client_channel_suggestion_count = expected_adj_client_channel_suggestion_df.count()\ncountCompare(f'Adjudication : CLIENT CHANNEL : Generated suggestion count till adjudication hcp_channel input',actual_adj_client_channel_suggestion_count,expected_adj_client_channel_suggestion_count)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:48:45+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134507024_2074333873",
+      "id": "AdjudicationClient_Channel_ValidateInputSuggestionsInADJ_HCP_CHANNEL",
+      "dateCreated": "2022-12-27T09:48:27+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2093",
+      "title": "Adjudication : Client_Channel : OM-TC-261, OM-TC-368 : Validate input individual suggestion"
+    },
+    {
+      "text": "%spark.pyspark\nclient_channel_list = adjudicate_clientChannel.split(\":\")\nfor eachChannel in client_channel_list:\n    channel_id = eachChannel.split(\"#\")[0]\n    channel_name = getChannelName(channel_id)\n    suggestion_count = int(eachChannel.split(\"#\")[1].split(\",\")[0])\n    \n    if suggestion_count > 0:\n        client_channel_suggestion_count_rule_df = spark.sql(f''' select count(*) as unexpected_suggestion_count from {db_name}.adj_hcp_channel_scenario{scenario_id} where adj_hcp_channel_flag = 'Y' AND UI_channel_id={channel_id} group by {client_ref}, UI_channel_id, adj_hcp_flag having unexpected_suggestion_count > {suggestion_count} ''')\n        if df_output_required:\n            client_channel_suggestion_count_rule_df.show()\n        assert client_channel_suggestion_count_rule_df.count() == 0, (f'Adjudication : Client_Channel : Might be Suggestion Count rule for {channel_id} : {channel_name} not worked as expected. More suggestions are approved then defined max range {suggestion_count}\\n\\n')\n        print(f'Adjudication : Client_Channel : Suggestion Count rule for {channel_id} : {channel_name} worked properly. Aprroved suggestion are under defined max range {suggestion_count}\\n\\n')\n        \n    else:\n        client_channel_suggestion_count_rule_df = spark.sql(f''' select count(*) as invalid_suggestion_status from {db_name}.adj_hcp_channel_scenario{scenario_id} where adj_hcp_channel_flag <> MIN_SUG_HCP_CHNL_INTERVAL_DAYS_FLAG ''')\n        if df_output_required:\n            client_channel_suggestion_count_rule_df.show()\n        assert client_channel_suggestion_count_rule_df.collect()[0][0] == 0, (f'Adjudication : Client_Channel : Might be Suggestion Count rule for {channel_id} : {channel_name} not worked as expected as suggestion rejected based on this rule even when not configured on UI\\n\\n')\n        print(f'Adjudication : Client_Channel : Suggestion Count rule for {channel_id} : {channel_name} worked properly. No suggestion rejected based on Suggestion Count rule logic\\n\\n')",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:49:27+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134558076_1053650312",
+      "id": "AdjudicationClientChannel_ValidateSUGGESTION_COUNTruleImplementedProperlyInADJ_HCP_CHANNEL",
+      "dateCreated": "2022-12-27T09:49:18+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2174",
+      "title": "Adjudication : Client_Channel : OM-TC-262, OM-TC-263, OM-TC-265 : Validate Suggestion Count rule"
+    },
+    {
+      "text": "%spark.pyspark\nclient_channel_list = adjudicate_clientChannel.split(\":\")\nfor eachChannel in client_channel_list:\n    channel_id = eachChannel.split(\"#\")[0]\n    channel_name = getChannelName(channel_id)\n    interval_duration = int(eachChannel.split(\"#\")[1].split(\",\")[1])\n    \n    if interval_duration > 0:\n        hcp_channel_interval_df = spark.sql(f''' select {client_ref}, UI_channel_id, max(sug_run_date) as hist_run_date from {db_name}.{forPublishHistTable} where UI_scenario_id={scenario_id} group by {client_ref},UI_channel_id ''')\n        hcp_channel_interval_df.createOrReplaceTempView(\"forPublishClientChannelDataInterval\")\n        client_channel_interval_df = spark.sql(f''' select count(*) as invalid_suggestions from {db_name}.adj_hcp_channel_scenario{scenario_id} as current \n                LEFT JOIN forPublishClientChannelDataInterval as history ON current.{client_ref}=history.{client_ref} AND current.UI_channel_id=history.UI_channel_id\n                where MIN_SUG_HCP_CHNL_INTERVAL_DAYS_FLAG=\"Y\" AND current.UI_channel_id = {channel_id} AND DATEDIFF(to_timestamp(SUG_RUN_DATE,'yyyyMMdd'), to_timestamp(hist_run_date,'yyyyMMdd'))<{interval_duration} ''')\n        if df_output_required:\n            client_channel_interval_df.show()\n        assert client_channel_interval_df.collect()[0][0] == 0, (f'Adjudication : Client_Channel : Might be Interval rule for {channel_id} : {channel_name} not worked as expected. Approved suggestion more than configured interval duration {interval_duration}\\n\\n')\n        print(f'Adjudication : Client_Channel : Interval rule for {channel_id} : {channel_name} worked properly. Aprroved suggestion are satisfying interval duration {interval_duration} \\n\\n')\n        \n    else:\n        client_channel_interval_rule_df = spark.sql(f''' select count(*) as disapproved_suggestion from {db_name}.adj_hcp_channel_scenario{scenario_id} where MIN_SUG_HCP_CHNL_INTERVAL_DAYS_FLAG=\"N\" ''')\n        if df_output_required:\n            client_channel_interval_rule_df.show()\n        assert client_channel_interval_rule_df.collect()[0][0] == 0, (f'Adjudication : Client_Channel : Might be Interval rule for {channel_id} : {channel_name} not worked as expected. Suggestion rejected based on Interval logic even when no rule configured for this channel\\n\\n')\n        print(f'Adjudication : Client_Channel : Interval rule for {channel_id} : {channel_name} worked properly. No suggestion rejected based on Interval rule logic\\n\\n')",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:49:59+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134578263_1546886467",
+      "id": "AdjudicationClientChannel_ValidateINTERVALruleImplementedProperlyInADJ_HCP_CHANNEL",
+      "dateCreated": "2022-12-27T09:49:38+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2252",
+      "title": "Adjudication : Client_Channel : OM-TC-262, OM-TC-264, OM-TC-265 : Validate Interval rule"
+    },
+    {
+      "text": "%spark.pyspark\nactual_post_adj_forPublish_suggestion_df = getAllDatadf(f\"adj_consldt_forpublish_hist_scenario{scenario_id}\").select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\nexpected_post_adj_forPublish_suggestion_df = getAllDatadf(f\"adj_hcp_channel_scenario{scenario_id}\").filter((F.col('adj_channel_flag') == 'Y') & (F.col('adj_hcp_flag') == 'Y') & (F.col('adj_hcp_channel_flag') == 'Y')).select(client_ref, 'BRAND','UI_Workflow_ID','UI_Channel_ID')\n\ndfCompare(f'Post Adjudication : Generated suggestion in adj_consldt_forpublish_hist',actual_post_adj_forPublish_suggestion_df,expected_post_adj_forPublish_suggestion_df)\n\nactual_post_adj_forPublish_suggestion_count = actual_post_adj_forPublish_suggestion_df.count()\nexpected_post_adj_forPublish_suggestion_count = expected_post_adj_forPublish_suggestion_df.count()\ncountCompare(f'Post Adjudication : Generated suggestion count in adj_consldt_forpublish_hist',actual_post_adj_forPublish_suggestion_count,expected_post_adj_forPublish_suggestion_count)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-27T09:50:32+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672134607703_1815440337",
+      "id": "PostAdjudication_ValidateInputSuggestionsIn__adj_consldt_forpublish_hist",
+      "dateCreated": "2022-12-27T09:50:07+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2333",
+      "title": "Post Adjudication : adj_consldt_forpublish_hist : OM-TC-266 : Validate overall individual approved suggestions"
+    }
+  ],
+  "name": "CICD_SCENARIO_ENGINE_VALIDATION_v03",
+  "id": "2HPXQTM4W",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/CICD_SCENARIO_ENGINE_VALIDATION_v03"
+}

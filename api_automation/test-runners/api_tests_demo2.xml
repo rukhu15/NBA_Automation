@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="API Suite">
+	<parameter name="aut_prop_file_name"
+		value="automation_demo2.properties" />
+	<test thread-count="5" name="Test">
+		<groups>
+			<run>
+				<include name="api" />
+			</run>
+		</groups>
+		<classes>
+			<class name="apiTestScript.ScenarioAPI_Test" />
+			<class name="tagManagement.apiTestScript.CreateTagAPI_Test" />
+			<class name="apiTestScript.DesignAPI_Test" />
+			<class name="apiTestScript.ChannelAPI_Test" />
+			<class name="apiTestScript.KPIBuilderAPI_Test" />
+			<class name="apiTestScript.ModelAPI_Test" />
+			<class name="apiTestScript.AdjudicateAPI_Test" />
+			<class name="apiTestScript.PublishAPI_Test" />
+			<class name="apiTestScript.ExecuteScenario_Test" />
+		</classes>
+	</test>
+
+	<test thread-count="5" name="CleaningEnvironment">
+		<groups>
+			<run>
+				<include name="clean" />
+			</run>
+		</groups>
+		<classes>
+			<class name="apiTestScript.ScenarioAPI_Test" />
+			<class name="apiTestScript.KPIBuilderAPI_Test" />
+			<class name="tagManagement.apiTestScript.DeleteTagAPI_Test" />
+		</classes>
+	</test>
+</suite>

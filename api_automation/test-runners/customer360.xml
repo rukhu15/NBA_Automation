@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="customer360">
+	<parameter name="aut_prop_file_name"
+		value="automation_qa.properties" />
+	<test thread-count="5" name="Test">
+		<groups>
+			<run>
+				<include name="Customer360_API" />
+			</run>
+		</groups>
+		<classes>
+			<class name="customer360.apiTestScript.FilterAPI_Test" />
+
+		 	<class name="customer360.apiTestScript.FetchTableAPI_Test" />
+
+			<class name="customer360.apiTestScript.FilterValueAPI_Test" />
+			<class name="customer360.apiTestScript.NrxInteraction_Test" />
+			<class
+				name="customer360.apiTestScript.InteractionFieldRespAPI_Test" />
+			<class
+				name="customer360.apiTestScript.InteractionContentAPI_Test" />
+			<class
+				name="customer360.apiTestScript.ChannelInteractionAPI_Test" />
+			<class
+				name="customer360.apiTestScript.PerformanceSummaryAPI_Test" />
+			<class name="customer360.apiTestScript.BannerAdAPI_Test" />
+			<class name="customer360.apiTestScript.WebsiteAPI_Test" />
+			<class name="customer360.apiTestScript.EmailGraphAPI_Test" />
+			<class
+				name="customer360.apiTestScript.InteractionSummaryAPI_Test" />
+			<class
+				name="customer360.apiTestScript.affiliatedAccountsGraphAPI_Test" />
+		</classes>
+	</test>
+</suite> 

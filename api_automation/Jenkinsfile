@@ -1,0 +1,108 @@
+pipeline {
+    agent { node { label 'selenium_ciq_run' } }
+    environment {
+        BRANCH_NAME = "${env.branch_name.split("/")[2]}"
+        TEST_TYPE = "${Test_Type}"
+        ENVIRONMENT_TYPE ="${Environment_Type}"
+        WORKSPACE_NAME ="${WORKSPACE_NAME}"
+    }
+
+    tools {
+        maven 'Maven'
+        jdk 'openjdk-11'
+    }
+
+    stages {
+
+        stage('Stage1: Cleanup Workspace') {
+            steps {
+                echo 'Cleaning up the workspace'
+                sh 'which docker-compose'
+                sh label: '', script: 'which docker-compose'
+                echo "$PATH"
+                sh 'pwd'
+            }
+        }
+
+        stage('Stage2: Checkout NBA Automation') {
+            steps {
+                git branch: env.BRANCH_NAME, changelog: true, credentialsId: 'bitbucket_credentials', poll: true,
+                        url: 'https://bitbucket.org/rndaxtria/nba_automation.git'
+            }
+        }
+
+        stage('Stage 3: Build and Run Automation') {
+            steps {
+                script {
+                    sh 'mvn --version'
+                    if(env.ENVIRONMENT_TYPE == 'qa'){
+                        if (env.TEST_TYPE == 'ui') {
+                            sh 'mvn -f api_automation/pom.xml clean install -Dsurefire.suiteXmlFiles=test-runners/testng.xml'
+                        }else if (env.TEST_TYPE == 'API-C360') {
+                            sh 'mvn -f api_automation/pom.xml clean install -Dsurefire.suiteXmlFiles=test-runners/customer360.xml'
+                        }else if (env.TEST_TYPE == 'API-tagManagement') {
+                            sh 'mvn -f api_automation/pom.xml clean install -Dsurefire.suiteXmlFiles=test-runners/tagMgmt.xml'
+                        }else if (env.TEST_TYPE == 'API-NBE') {
+                            sh 'mvn -f api_automation/pom.xml clean test -Dsurefire.suiteXmlFiles=test-runners/api_tests_nbe.xml -DWORKSPACE_NAME=${WORKSPACE_NAME}'
+                        }else {
+                            sh 'mvn -f api_automation/pom.xml clean test -Dsurefire.suiteXmlFiles=test-runners/api_tests_nbe.xml -DWORKSPACE_NAME=${WORKSPACE_NAME}'
+                        }
+                    }else if(env.ENVIRONMENT_TYPE == 'demo2'){
+                        if (env.TEST_TYPE == 'API-C360') {
+                            sh 'mvn -f api_automation/pom.xml clean install -Dsurefire.suiteXmlFiles=test-runners/customer360_demo2.xml'
+                        }else if (env.TEST_TYPE == 'API-tagManagement') {
+                            sh 'mvn -f api_automation/pom.xml clean install -Dsurefire.suiteXmlFiles=test-runners/tagMgmt_demo2.xml'
+                        }else if (env.TEST_TYPE == 'API-NBE') {
+                            sh 'mvn -f api_automation/pom.xml clean test -Dsurefire.suiteXmlFiles=test-runners/api_tests_demo2_nbe.xml -DWORKSPACE_NAME=${WORKSPACE_NAME}'
+                        }else{
+                            sh 'mvn -f api_automation/pom.xml clean test -Dsurefire.suiteXmlFiles=test-runners/api_tests_demo2_nbe.xml -DWORKSPACE_NAME=${WORKSPACE_NAME}'
+                        }
+                    }else if(env.ENVIRONMENT_TYPE == 'demo4'){
+                        if (env.TEST_TYPE == 'API-C360') {
+                            sh 'mvn -f api_automation/pom.xml clean install -Dsurefire.suiteXmlFiles=test-runners/customer360_demo4.xml'
+                        }else if (env.TEST_TYPE == 'API-tagManagement') {
+                            sh 'mvn -f api_automation/pom.xml clean install -Dsurefire.suiteXmlFiles=test-runners/tagMgmt_demo4.xml'
+                        }else if (env.TEST_TYPE == 'API-NBE') {
+                            sh 'mvn -f api_automation/pom.xml clean test -Dsurefire.suiteXmlFiles=test-runners/api_tests_demo4_nbe.xml -DWORKSPACE_NAME=${WORKSPACE_NAME}'
+                        }else{
+                            sh 'mvn -f api_automation/pom.xml clean test -Dsurefire.suiteXmlFiles=test-runners/api_tests_demo4_nbe.xml -DWORKSPACE_NAME=${WORKSPACE_NAME}'
+                        }
+                    }
+                    else {
+                        sh 'mvn -f api_automation/pom.xml clean test -Dsurefire.suiteXmlFiles=test-runners/api_tests.xml -DWORKSPACE_NAME=${WORKSPACE_NAME}'
+                    }
+                }
+            }
+        }
+
+        stage('Stage 4: Automation Code Quality Check via SonarQube') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQube';
+                    withSonarQubeEnv("sonarqube-container") {
+                        sh "${tool("SonarQube")}/bin/sonar-scanner \
+                        -Dsonar.projectKey=CustomerIQ-nba-automation \
+                        -Dsonar.sources=api_automation/src \
+                        -Dsonar.java.binaries=api_automation/target "
+                    }
+                }
+            }
+        }
+
+    }
+    post {
+        always {
+            mail bcc: '', body: "Execution Details:\n"+"Job_Name: ${env.JOB_NAME}"  +"\nRegression_Suite_Type: ${Test_Type}"+
+                    "\nEnvironment : ${Environment_Type}" +
+                    "\nBuild Number: ${env.BUILD_NUMBER} " +
+                    "\nBuild: ${env.BUILD_URL} " +
+                    "\nMore details can be found at : ${env.BUILD_URL}/console" , cc: '',
+                    from: 'CustomerIQadmin@Axtria.onmicrosoft.com', replyTo: '', subject: 'CustomerIQ -> Daily ' +
+                    'Automation Tests Report: ' + "${Environment_Type} : ${Test_Type} : ${currentBuild.result}",
+                    to: 'prateek.sethi@axtria.com,avinash.gupta1@axtria.com,' +
+                            'samiksha.s@axtria.com,pinak.sharma@axtria.com,' +
+                            'bisma.akhter@axtria.com,lalithya.reddy@axtria.com,' +
+                            'nizamuddin.javad@axtria.com,damakuntla.raffi@axtria.com'
+        }
+    }
+}

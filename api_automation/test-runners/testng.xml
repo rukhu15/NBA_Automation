@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Suite">
+  <parameter name="aut_prop_file_name" value="automation_qa.properties" />
+  <test thread-count="5" name="Test">
+    <groups>
+      <run>
+        <include name="SANITY" />
+      </run>
+    </groups>
+    <classes>
+     <class name="testscripts.Login_Test"/>
+      <class name="testscripts.DeleteAutomation_Objects"/>
+	  <class name="testscripts.HomePage_Test"/>
+      <class name="testscripts.TagPage_Test"/> 
+      <class name="testscripts.ScenarioPage_Test"/>
+      <class name="testscripts.KpiPage_Test"/>
+      <class name="testscripts.DesignPage_Test"/>
+      <class name="testscripts.ModelPage_Test"/>
+      <class name="testscripts.AdjudicatePage_Test"/>
+      <class name="testscripts.SegmentationPage_Test"/>
+      <class name="testscripts.CustomerIntelligence_Test"/>
+      <class name="testscripts.AimlModelCreation_Test"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
